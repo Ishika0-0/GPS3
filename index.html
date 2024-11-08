@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Geolocation Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #details {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+        }
+        .info-item {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Geolocation Information</h1>
+    <div id="details">
+        <p>Loading...</p>
+    </div>
+
+    <script>
+        var reqcount = 0;
+        
+        // Watch position changes
+        navigator.geolocation.watchPosition(
+            successCallback,
+            errorCallback,
+            options
+        );
+
+        // Success callback
+        function successCallback(position) {
+            const { accuracy, latitude, longitude, altitude, heading, speed } = position.coords;
+            reqcount++;
+
+            // Select the details div to display data
+            const details = document.getElementById("details");
+
+            details.innerHTML = `
+                <div class="info-item"><strong>Latitude:</strong> ${latitude}</div>
+                <div class="info-item"><strong>Longitude:</strong> ${longitude}</div>
+                <div class="info-item"><strong>Speed:</strong> ${speed ? speed.toFixed(2) : 'N/A'} m/s</div>
+                <div class="info-item"><strong>Altitude:</strong> ${altitude ? altitude.toFixed(2) : 'N/A'} meters</div>
+                <div class="info-item"><strong>Accuracy:</strong> ${accuracy.toFixed(2)} meters</div>
+                <div class="info-item"><strong>Heading:</strong> ${heading ? heading.toFixed(2) : 'N/A'}°</div>
+                <div class="info-item"><strong>Request Count:</strong> ${reqcount}</div>
+            `;
+        }
+
+        // Error callback
+        function errorCallback(error) {
+            const details = document.getElementById("details");
+            details.innerHTML = `<p>Error getting location: ${error.message}</p>`;
+        }
+
+        // Options for geolocation
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+    </script>
+</body>
+</html>
